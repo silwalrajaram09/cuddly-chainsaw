@@ -51,22 +51,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.page-hero {
-  background: var(--navy);
-  padding: 56px 0 40px;
-}
-.page-hero h1 {
-  color: var(--white);
-  font-size: 34px;
-  font-weight: 800;
-}
-.page-hero p {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 15px;
-  margin-top: 8px;
-}
 .prose :deep(p) {
   margin: 0 0 12px;
+  color: var(--gray-700);
 }
 .prose :deep(a) {
   color: var(--gold);

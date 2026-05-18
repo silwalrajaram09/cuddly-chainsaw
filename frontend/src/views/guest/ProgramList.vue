@@ -91,51 +91,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.page-hero {
-  background: var(--navy);
-  padding: 56px 0 40px;
-}
-.page-hero h1 {
-  color: var(--white);
-  font-size: 36px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.page-hero p {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 16px;
-}
-
-/* Loading */
-.loading-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 50vh;
-}
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 3px solid var(--gray-200);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Grid */
-.page-section {
-  padding: 48px 0;
-}
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -144,13 +99,11 @@ onMounted(async () => {
 
 .program-card {
   cursor: pointer;
-  transition:
-    box-shadow 0.2s,
-    transform 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .program-card:hover {
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
-  transform: translateY(-3px);
 }
 
 .program-top {
@@ -163,38 +116,38 @@ onMounted(async () => {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
 }
 
-/* status colors (best-effort) */
+/* status colors */
 .program-badge.upcoming {
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
+  background: #dbeafe;
+  color: #1e40af;
 }
 .program-badge.ongoing {
-  background: rgba(34, 197, 94, 0.2);
-  color: #4ade80;
+  background: #dcfce7;
+  color: #15803d;
 }
 .program-badge.completed {
-  background: rgba(156, 163, 175, 0.2);
-  color: #9ca3af;
+  background: #f1f5f9;
+  color: #475569;
 }
 .program-badge.unknown,
 .program-badge {
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
+  background: var(--gray-100);
+  color: var(--gray-600);
 }
 
 .card-body {
-  padding: 18px;
+  padding: 24px;
 }
 
 .program-card h3 {
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--navy);
   margin-bottom: 8px;
 }
@@ -214,29 +167,23 @@ onMounted(async () => {
 }
 .meta-item {
   padding: 10px 12px;
-  border-radius: 12px;
+  border-radius: 8px;
   background: var(--gray-50);
+  border: 1px solid var(--gray-200);
 }
 .meta-label {
   display: block;
-  font-size: 11px;
+  font-size: 10px;
   color: var(--gray-500);
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 .meta-value {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--navy);
-}
-
-.read-more {
-  display: inline-block;
-  margin-top: 14px;
-  font-size: 13px;
-  color: var(--gold);
-  font-weight: 600;
 }
 
 /* Empty */
@@ -245,15 +192,16 @@ onMounted(async () => {
   padding: 60px 20px;
   background: var(--white);
   border-radius: 16px;
+  border: 1px dashed var(--gray-300);
 }
 .empty-icon {
-  font-size: 64px;
+  font-size: 48px;
   margin-bottom: 16px;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 .empty-state h3 {
-  font-size: 20px;
-  color: var(--gray-600);
+  font-size: 18px;
+  color: var(--gray-700);
   margin: 0 0 8px 0;
 }
 .empty-state p {

@@ -62,29 +62,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.page-hero {
-  background: var(--navy);
-  padding: 56px 0 40px;
-}
-.page-hero h1 {
-  color: var(--white);
-  font-size: 36px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.page-hero p {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 16px;
-}
 .c-card {
   cursor: pointer;
-  transition:
-    box-shadow 0.2s,
-    transform 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .c-card:hover {
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
-  transform: translateY(-3px);
 }
 .c-icon {
   font-size: 32px;
@@ -92,7 +76,7 @@ onMounted(async () => {
 }
 .c-card h3 {
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--navy);
   margin-bottom: 8px;
 }
@@ -101,10 +85,5 @@ onMounted(async () => {
   color: var(--gray-500);
   line-height: 1.65;
   margin-bottom: 14px;
-}
-.read-more {
-  font-size: 13px;
-  color: var(--gold);
-  font-weight: 500;
 }
 </style>

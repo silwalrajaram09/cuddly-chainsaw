@@ -106,32 +106,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.page-hero {
-  background: var(--navy);
-  padding: 56px 0 40px;
-}
-
-.breadcrumb {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 14px;
-  display: inline-block;
-  margin-bottom: 16px;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.breadcrumb:hover {
-  color: var(--gold);
-}
-
-.page-hero h1 {
-  color: var(--white);
-  font-size: 42px;
-  font-weight: 800;
-  margin-bottom: 16px;
-  line-height: 1.2;
-}
-
 .post-meta {
   display: flex;
   gap: 16px;
@@ -143,10 +117,11 @@ onMounted(() => {
   color: var(--gold);
   font-weight: 600;
   font-size: 14px;
+  text-transform: uppercase;
 }
 
 .post-updated {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--gray-500);
   font-size: 13px;
 }
 
@@ -220,14 +195,6 @@ onMounted(() => {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .page-hero {
-    padding: 40px 0 32px;
-  }
-
-  .page-hero h1 {
-    font-size: 28px;
-  }
-
   .card-body {
     padding: 20px;
   }
@@ -238,10 +205,6 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
-  .page-hero h1 {
-    font-size: 24px;
-  }
-
   .post-meta {
     flex-direction: column;
     align-items: flex-start;

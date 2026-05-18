@@ -65,42 +65,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.page-hero {
-  background: var(--navy);
-  padding: 56px 0 40px;
-}
-.page-hero h1 {
-  color: var(--white);
-  font-size: 36px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.page-hero p {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 16px;
-}
 .m-card {
   cursor: pointer;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .m-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
-}
-.avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--navy);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0 auto 12px;
 }
 .m-card h3 {
   font-size: 15px;

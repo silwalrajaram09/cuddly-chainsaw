@@ -79,46 +79,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.page-hero {
-  background: var(--navy);
-  padding: 56px 0 40px;
-}
-.breadcrumb {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 13px;
-  display: block;
-  margin-bottom: 12px;
-}
-.breadcrumb:hover {
-  color: var(--gold);
-}
-.page-hero h1 {
-  color: var(--white);
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.page-hero p {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 15px;
-  max-width: 600px;
-}
-.avatar {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--navy);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 auto 12px;
-}
 .member-card h4 {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--navy);
   margin-bottom: 4px;
 }

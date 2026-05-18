@@ -18,7 +18,6 @@
           <RouterLink
             to="/programs"
             class="btn btn-outline"
-            style="color: #fff; border-color: rgba(255, 255, 255, 0.4)"
             >View Programs</RouterLink
           >
         </div>
@@ -213,24 +212,26 @@ onMounted(async () => {
 <style scoped>
 /* Hero */
 .hero {
-  background: linear-gradient(135deg, var(--navy) 0%, #1a3a6e 100%);
-  padding: 96px 0 80px;
+  background: var(--white);
+  padding: 80px 0 64px;
   text-align: center;
+  border-bottom: 1px solid var(--gray-200);
 }
 .hero-title {
-  font-size: clamp(32px, 5vw, 56px);
-  font-weight: 700;
-  color: var(--white);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  color: var(--navy);
   margin-bottom: 16px;
   line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 .gold {
   color: var(--gold);
 }
 .hero-sub {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.72);
-  max-width: 600px;
+  font-size: 16px;
+  color: var(--gray-600);
+  max-width: 620px;
   margin: 0 auto 32px;
   line-height: 1.7;
 }
@@ -243,54 +244,55 @@ onMounted(async () => {
 
 /* Stats */
 .stats-bar {
-  background: var(--white);
+  background: var(--gray-50);
   border-bottom: 1px solid var(--gray-200);
 }
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   text-align: center;
-  padding: 28px 0;
+  padding: 20px 0;
 }
 .stat {
-  padding: 16px;
+  padding: 12px;
 }
 .stat-num {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: var(--navy);
   line-height: 1;
 }
 .stat-label {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--gray-500);
-  margin-top: 4px;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
 }
 
 /* Cards */
 .committee-card,
 .program-card,
 .post-card {
-  transition:
-    box-shadow 0.2s,
-    transform 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
 }
 .committee-card:hover,
 .program-card:hover,
 .post-card:hover {
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
-  transform: translateY(-3px);
 }
 .committee-icon {
   font-size: 28px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .committee-card h3,
 .program-card h3,
 .post-card h3 {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--navy);
   margin-bottom: 8px;
 }
@@ -304,8 +306,9 @@ onMounted(async () => {
 .post-date {
   font-size: 12px;
   color: var(--gold);
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 6px;
+  text-transform: uppercase;
 }
 
 @media (max-width: 600px) {
