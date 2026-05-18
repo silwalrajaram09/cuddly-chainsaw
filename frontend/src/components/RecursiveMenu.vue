@@ -18,6 +18,7 @@
           v-if="item.children?.length"
           class="toggle-btn"
           @click.stop="toggleItem(item.id)"
+          :aria-label="openItem === item.id ? 'Collapse' : 'Expand'"
         >
           <svg
             class="toggle-icon"
@@ -40,10 +41,11 @@
       <Transition name="submenu-fade">
         <div
           v-if="item.children?.length && openItem === item.id"
-          ref="submenuRef"
+          :ref="(el) => setSubmenuRef(el, item.id)"
           class="submenu"
           :class="{
-            'submenu-left': shouldOpenLeft,
+            'submenu-left': submenuPositions[item.id]?.openLeft,
+            'submenu-top': submenuPositions[item.id]?.openTop,
           }"
         >
           <RecursiveMenu :items="item.children" />
@@ -54,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, watch, onMounted, onUnmounted } from "vue";
+import { ref, computed, nextTick, onMounted, onUnmounted } from "vue";
 import RecursiveMenu from "./RecursiveMenu.vue";
 
 const props = defineProps({
@@ -62,14 +64,13 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  depth: {
+    type: Number,
+    default: 0,
+  },
 });
 
-/* ----------------------------------------
-   Responsive Detection
----------------------------------------- */
-
 const screenWidth = ref(window.innerWidth);
-
 const updateWidth = () => {
   screenWidth.value = window.innerWidth;
 };
@@ -83,16 +84,20 @@ onUnmounted(() => {
 });
 
 const isDesktop = computed(() => screenWidth.value >= 768);
-
-/* ----------------------------------------
-   Open Menu State
----------------------------------------- */
-
 const openItem = ref(null);
+const submenuRefs = ref({});
+const submenuPositions = ref({});
+
+const setSubmenuRef = (el, id) => {
+  if (el) {
+    submenuRefs.value[id] = el;
+  }
+};
 
 const handleMouseEnter = (id) => {
   if (isDesktop.value) {
     openItem.value = id;
+    calculatePosition(id);
   }
 };
 
@@ -105,37 +110,88 @@ const handleMouseLeave = () => {
 const toggleItem = (id) => {
   if (!isDesktop.value) {
     openItem.value = openItem.value === id ? null : id;
+    if (openItem.value === id) {
+      setTimeout(() => calculatePosition(id), 50);
+    }
+  }
+};
+const calculatePosition = async (itemId) => {
+  await nextTick();
+
+  const submenuEl = submenuRefs.value[itemId];
+  if (!submenuEl) return;
+
+  // Find the parent menu item
+  const parentMenuItem = submenuEl.closest(".menu-item");
+  if (!parentMenuItem) return;
+
+  const submenuRect = submenuEl.getBoundingClientRect();
+  const parentRect = parentMenuItem.getBoundingClientRect();
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  let openLeft = false;
+  let openTop = false;
+
+  // Check horizontal overflow (right side)
+  const spaceOnRight = viewportWidth - parentRect.right;
+  const spaceOnLeft = parentRect.left;
+  const submenuWidth = submenuRect.width;
+
+  // Decide which side to open
+  if (spaceOnRight < submenuWidth + 20 && spaceOnLeft > submenuWidth + 20) {
+    openLeft = true; // Open to the left
+  } else if (
+    spaceOnRight < submenuWidth + 20 &&
+    spaceOnLeft < submenuWidth + 20
+  ) {
+    // Not enough space on either side, open to the right but adjust position
+    openLeft = false;
+  }
+
+  // Check vertical overflow
+  const spaceBelow = viewportHeight - parentRect.bottom;
+  const spaceAbove = parentRect.top;
+  const submenuHeight = submenuRect.height;
+
+  if (spaceBelow < submenuHeight + 20 && spaceAbove > submenuHeight + 20) {
+    openTop = true; // Open upward
+  }
+
+  submenuPositions.value[itemId] = { openLeft, openTop };
+
+  // Apply inline styles for precise positioning if needed
+  if (openTop) {
+    submenuEl.style.top = "auto";
+    submenuEl.style.bottom = "0";
+  } else {
+    submenuEl.style.top = "0";
+    submenuEl.style.bottom = "auto";
   }
 };
 
-/* ----------------------------------------
-   Smart Submenu Positioning
----------------------------------------- */
-
-const submenuRef = ref(null);
-const shouldOpenLeft = ref(false);
-
-watch(openItem, async (newValue, oldValue) => {
-  if (!newValue) return;
-
-  await nextTick();
-
-  // Get all submenu elements and check the last one
-  const submenuElements = document.querySelectorAll(".submenu");
-  const lastSubmenu = submenuElements[submenuElements.length - 1];
-
-  if (lastSubmenu) {
-    const rect = lastSubmenu.getBoundingClientRect();
-    shouldOpenLeft.value = rect.right + 10 > window.innerWidth;
+// Recalculate position when window is resized
+const handleResize = () => {
+  if (openItem.value) {
+    calculatePosition(openItem.value);
   }
+};
+
+onMounted(() => {
+  window.addEventListener("resize", handleResize);
+  window.addEventListener("scroll", () => {
+    if (openItem.value) {
+      calculatePosition(openItem.value);
+    }
+  });
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize);
 });
 </script>
 
 <style scoped>
-/* ----------------------------------------
-   Base Menu
----------------------------------------- */
-
 .menu-list {
   list-style: none;
   margin: 0;
@@ -147,20 +203,12 @@ watch(openItem, async (newValue, oldValue) => {
   position: relative;
 }
 
-/* ----------------------------------------
-   Menu Row
----------------------------------------- */
-
 .menu-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
 }
-
-/* ----------------------------------------
-   Menu Link
----------------------------------------- */
 
 .menu-link {
   flex: 1;
@@ -180,10 +228,6 @@ watch(openItem, async (newValue, oldValue) => {
   color: #c9a227;
 }
 
-/* ----------------------------------------
-   Toggle Button
----------------------------------------- */
-
 .toggle-btn {
   border: none;
   background: none;
@@ -198,16 +242,20 @@ watch(openItem, async (newValue, oldValue) => {
   transition: all 0.15s ease;
   flex-shrink: 0;
 }
+
 .toggle-btn:hover {
   background: #edf2f7;
   color: #c9a227;
 }
+
 .toggle-icon {
   transition: transform 0.2s ease;
 }
+
 .toggle-icon.rotated {
   transform: rotate(90deg);
 }
+
 .submenu {
   background: white;
   border-radius: 14px;
@@ -225,10 +273,16 @@ watch(openItem, async (newValue, oldValue) => {
     z-index: 999;
   }
 
-  /* Smart overflow prevention */
+  /* Smart overflow prevention - open to the left */
   .submenu-left {
     left: auto;
     right: calc(100% + 6px);
+  }
+
+  /* Open upward instead of downward */
+  .submenu-top {
+    top: auto;
+    bottom: 0;
   }
 
   /* Hide mobile expand buttons on desktop */
@@ -250,12 +304,18 @@ watch(openItem, async (newValue, oldValue) => {
     border-left: 2px solid #e2e8f0;
     box-shadow: none;
   }
+
+  /* Reset positioning for mobile */
+  .submenu-left,
+  .submenu-top {
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+  }
 }
 
-/* ----------------------------------------
-   Animations
----------------------------------------- */
-
+/* Animations */
 .submenu-fade-enter-active,
 .submenu-fade-leave-active {
   transition: all 0.2s ease;

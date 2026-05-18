@@ -7,31 +7,52 @@
     <div v-else-if="post" class="page-wrap">
       <div class="page-hero">
         <div class="container">
-          <RouterLink to="/posts" class="breadcrumb">← Posts</RouterLink>
-          <h1>{{ post.title }}</h1>
-          <p class="post-date">{{ formatDate(post.created_at) }}</p>
+          <RouterLink to="/posts" class="breadcrumb"
+            >← Back to Posts</RouterLink
+          >
+          <h1>{{ post.name }}</h1>
+          <div class="post-meta">
+            <span class="post-date">{{ formatDate(post.created_at) }}</span>
+            <span
+              v-if="post.updated_at !== post.created_at"
+              class="post-updated"
+            >
+              Updated: {{ formatDate(post.updated_at) }}
+            </span>
+          </div>
         </div>
       </div>
 
       <section class="page-section">
         <div class="container">
           <div class="card">
+            <div v-if="post.photo_url" class="post-image">
+              <img :src="post.photo_url" :alt="post.name" />
+            </div>
             <div class="card-body">
-              <div class="prose" v-html="post.content"></div>
+              <div class="prose" v-html="formattedDescription"></div>
             </div>
           </div>
         </div>
       </section>
     </div>
 
-    <div v-else class="loading-center" style="min-height: 50vh">
-      <p style="color: var(--gray-400)">Post not found.</p>
+    <div v-else class="not-found">
+      <div class="container">
+        <div class="not-found-content">
+          <h2>Post Not Found</h2>
+          <p>The post you're looking for doesn't exist or has been removed.</p>
+          <RouterLink to="/posts" class="btn btn-primary"
+            >View All Posts</RouterLink
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute, RouterLink } from "vue-router";
 import { getPost } from "@/api/posts";
 
@@ -39,24 +60,48 @@ const route = useRoute();
 const post = ref(null);
 const loading = ref(true);
 
-function formatDate(d) {
-  if (!d) return "";
-  return new Date(d).toLocaleDateString("en-US", {
+// Format description as HTML (convert line breaks to paragraphs)
+const formattedDescription = computed(() => {
+  if (!post.value?.description) return "";
+  // Convert line breaks to <p> tags
+  const paragraphs = post.value.description.split("\n").filter((p) => p.trim());
+  return paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join("");
+});
+
+// Helper to escape HTML
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 }
 
-onMounted(async () => {
+async function loadPost() {
+  loading.value = true;
   try {
-    const { data } = await getPost(route.params.id);
-    post.value = data;
-  } catch {
+    const response = await getPost(route.params.id);
+    // Handle response structure
+    post.value = response.data?.data || response.data;
+    console.log("Loaded post:", post.value);
+  } catch (error) {
+    console.error("Failed to load post:", error);
     post.value = null;
   } finally {
     loading.value = false;
   }
+}
+
+onMounted(() => {
+  loadPost();
 });
 </script>
 
@@ -65,26 +110,142 @@ onMounted(async () => {
   background: var(--navy);
   padding: 56px 0 40px;
 }
+
 .breadcrumb {
   color: rgba(255, 255, 255, 0.5);
-  font-size: 13px;
-  display: block;
-  margin-bottom: 12px;
+  font-size: 14px;
+  display: inline-block;
+  margin-bottom: 16px;
+  text-decoration: none;
+  transition: color 0.2s;
 }
+
 .breadcrumb:hover {
   color: var(--gold);
 }
+
 .page-hero h1 {
   color: var(--white);
-  font-size: 34px;
-  font-weight: 900;
-  margin-bottom: 10px;
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.2;
 }
+
+.post-meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .post-date {
   color: var(--gold);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.post-updated {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+}
+
+.post-image {
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.post-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 32px;
+}
+
+.prose {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--gray-700);
+}
+
+.prose :deep(p) {
+  margin-bottom: 20px;
+}
+
+.prose :deep(p:last-child) {
+  margin-bottom: 0;
+}
+
+.prose :deep(strong) {
+  color: var(--navy);
   font-weight: 700;
 }
-.prose :deep(p) {
-  margin: 0 0 12px;
+
+.prose :deep(a) {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
+.prose :deep(a:hover) {
+  color: var(--gold-dark);
+}
+
+/* Not Found */
+.not-found {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.not-found-content {
+  padding: 40px;
+}
+
+.not-found h2 {
+  font-size: 28px;
+  color: var(--gray-600);
+  margin: 0 0 12px 0;
+}
+
+.not-found p {
+  color: var(--gray-500);
+  margin-bottom: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-hero {
+    padding: 40px 0 32px;
+  }
+
+  .page-hero h1 {
+    font-size: 28px;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .prose {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-hero h1 {
+    font-size: 24px;
+  }
+
+  .post-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
 }
 </style>

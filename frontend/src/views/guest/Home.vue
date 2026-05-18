@@ -4,7 +4,7 @@
     <section class="hero">
       <div class="container">
         <h1 class="hero-title">
-          DSP Holdings <span class="gold">Pvt. Ltd.</span>
+          Info Tech <span class="gold">Pvt. Ltd.</span>
         </h1>
         <p class="hero-sub">
           A Kathmandu-based investment holding company committed to sustainable
@@ -54,7 +54,7 @@
       <div class="container">
         <h2 class="section-title">Our Committees</h2>
         <p class="section-subtitle">
-          Specialized leadership groups driving strategic direction.
+          Specialized technical groups driving strategic direction.
         </p>
 
         <div v-if="loadingCommittees" class="loading-center">
@@ -121,7 +121,7 @@
     <section class="page-section">
       <div class="container">
         <h2 class="section-title">Latest News</h2>
-        <p class="section-subtitle">Updates and insights from DSP Holdings.</p>
+        <p class="section-subtitle">Updates and insights from Info Tech.</p>
 
         <div v-if="loadingPosts" class="loading-center">
           <div class="spinner"></div>

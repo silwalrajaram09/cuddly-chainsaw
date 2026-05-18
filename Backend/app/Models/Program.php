@@ -6,12 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Carbon;
 
-/**
- * @property Carbon|null $start_date
- * @property Carbon|null $end_date
- */
 class Program extends Model
 {
     use HasFactory;
@@ -82,7 +77,7 @@ class Program extends Model
         }
 
         if ($this->start_date && $this->end_date) {
-            return $this->start_date->diffInDays($this->end_date) + 1;
+            return $this->start_date->diffInDays($this->end_date);
         }
 
         return null;

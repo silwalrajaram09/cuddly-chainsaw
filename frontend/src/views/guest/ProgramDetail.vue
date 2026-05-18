@@ -180,21 +180,26 @@ function formatDate(dateString) {
 
 // Helper function to generate consistent avatar colors
 function getAvatarColor(id) {
+  const str = String(id);
+
   const colors = [
-    "#1e3a5f", // navy
-    "#c9a227", // gold
-    "#2c7da0", // blue
-    "#2e8b57", // green
-    "#8b4513", // brown
-    "#4a148c", // purple
-    "#c62828", // red
+    "#1e3a5f",
+    "#c9a227",
+    "#2c7da0",
+    "#2e8b57",
+    "#8b4513",
+    "#4a148c",
+    "#c62828",
   ];
 
   let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash << 5) - hash + id.charCodeAt(i);
+
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+
     hash |= 0;
   }
+
   return colors[Math.abs(hash) % colors.length];
 }
 
@@ -216,32 +221,41 @@ onMounted(async () => {
 /* Hero Section */
 .page-hero {
   background: linear-gradient(135deg, var(--navy) 0%, #1e3a5f 100%);
+
   padding: 48px 0;
+
   position: relative;
+
   overflow: hidden;
 }
 
 .page-hero::before {
   content: "";
+
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+
+  inset: 0;
+
   background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="rgba(255,255,255,0.03)" d="M0 0h200v200H0z"/></svg>');
+
   opacity: 0.1;
+
+  z-index: 0;
+
+  pointer-events: none;
 }
 
+.breadcrumb,
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
 .breadcrumb {
-  display: inline-flex;
-  align-items: center;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
-  text-decoration: none;
-  margin-bottom: 20px;
-  transition: color 0.2s;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  display: block;
+  margin-bottom: 12px;
 }
-
 .breadcrumb:hover {
   color: var(--gold);
 }

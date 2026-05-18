@@ -1,8 +1,8 @@
 <template>
   <div class="login-page">
     <div class="login-brand">
-      <span class="brand-dsp">DSP</span>
-      <span class="brand-text">Holdings</span>
+      <span class="brand-dsp">Info</span>
+      <span class="brand-text">Tech</span>
     </div>
 
     <div class="login-card">
@@ -21,7 +21,7 @@
             v-model="form.email"
             type="email"
             class="form-control"
-            placeholder="admin@dspholdings.com"
+            placeholder="admin@infoTech.com"
             autocomplete="email"
             required
           />
