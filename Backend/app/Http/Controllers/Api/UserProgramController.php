@@ -14,7 +14,8 @@ class UserProgramController extends Controller
         ]);
 
         $member->programs()->syncWithoutDetaching([$request->program_id]);
-        return response()->json(['message' => 'Program attached']);
+
+        return response()->json(['message' => 'Program attached successfully']);
     }
 
     public function detach(User $member, $programId)

@@ -11,14 +11,14 @@ class UserCommitteeController extends Controller
     {
         $request->validate([
             'committee_id' => 'required|exists:committees,id',
-            'order_no'     => 'nullable|numeric',
+            'order_no' => 'nullable|numeric',
         ]);
 
         $member->committees()->syncWithoutDetaching([
             $request->committee_id => ['order_no' => $request->order_no ?? 0],
         ]);
 
-        return response()->json(['message' => 'Committee attached']);
+        return response()->json(['message' => 'Committee attached successfully']);
     }
 
     public function updateOrder(Request $request, User $member, $committeeId)
@@ -29,7 +29,7 @@ class UserCommitteeController extends Controller
             'order_no' => $request->order_no,
         ]);
 
-        return response()->json(['message' => 'Order updated']);
+        return response()->json(['message' => 'Order updated successfully']);
     }
 
     public function detach(User $member, $committeeId)

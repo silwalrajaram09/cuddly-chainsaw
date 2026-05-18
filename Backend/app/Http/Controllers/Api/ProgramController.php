@@ -11,12 +11,17 @@ class ProgramController extends Controller
 {
     public function index()
     {
-        return ProgramResource::collection(Program::latest()->paginate(20));
+        $programs = Program::withCount('members')->latest()->paginate(20);
+
+        return ProgramResource::collection($programs);
     }
 
     public function show(Program $program)
     {
-        return new ProgramResource($program->load('members'));
+        // Load members relationship - this was the error!
+        $program->load('members');
+
+        return new ProgramResource($program);
     }
 
     public function store(StoreProgramRequest $request)
